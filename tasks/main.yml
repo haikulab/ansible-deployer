@@ -1,0 +1,36 @@
+---
+
+- name: Create Deployment User aka Deployer
+  user: |
+    name={{ deployer_username }}
+    password={{ deployer_password }}
+    generate_ssh_key=yes
+    group=ssh
+    append=yes
+    state=present
+    shell=/bin/bash
+  register: deployer_created
+
+- name: Add deployment user groups
+  when: deployer_created|success
+  user: |
+    name={{ deployer_username }}
+    groups={{ item }}
+  with_items: groups_to_join
+
+- name: Add Deployer Authorised Key
+  authorized_key:
+    user={{ deployer_username }}
+    key="{{ deployer_public_key }}"
+    state=present
+
+- name: Ensure github.com/bitbucket.org are a known host
+  lineinfile:
+    dest: /home/{{ deployer_username }}/.ssh/known_hosts
+    create: yes
+    state: present
+    line: "{{ item.domain }}"
+    regexp: "{{ item.regexp }}"
+  with_items:
+    - { domain: "{{ lookup('pipe', 'ssh-keyscan -t rsa github.com') }}", regexp: '^github\.com' }
+    - { domain: "{{ lookup('pipe', 'ssh-keyscan -t rsa bitbucket.org') }}", regexp: '^bitbucket\.org' }
