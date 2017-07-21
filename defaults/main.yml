@@ -4,7 +4,7 @@
 
 deployer_username: deployer
 deployer_password: $1$BYnbBLbt$uPcFu8SPIZdxqPh61
-deployer_public_key: "{{ lookup('file', '/Users/filips01/.ssh/id_dsa.pub' ) }}"
+deployer_public_key: "{{ lookup('file', '~/.ssh/id_rsa.pub' ) }}"
 
 groups_to_join:
   - sudo
