@@ -11,7 +11,7 @@ The `vars/main.yml` file should contain your list of packages you want to instal
 ---
 deployer_username: deployer
 deployer_password: some_password
-deployer_public_key: "{{ lookup('file', '/home/user/.ssh/id_dsa.pub' ) }}"
+deployer_public_key: "{{ lookup('file', '/home/user/.ssh/id_rsa.pub' ) }}"
 
 groups_to_join:
   - sudo
@@ -28,7 +28,7 @@ Additionally, you can overwrite the variables as part of your playbook.
   vars:
     deployer_username: deployer
     deployer_password: $1$BYnbBLbt$uPcFu8SPIZdxqPh61
-    deployer_public_key: "{{ lookup('file', '/home/user/.ssh/id_dsa.pub' ) }}"
+    deployer_public_key: "{{ lookup('file', '/home/user/.ssh/id_rsa.pub' ) }}"
     groups_to_join:
       - sudo
       - ssh
