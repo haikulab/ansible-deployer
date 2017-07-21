@@ -1,32 +1,32 @@
 ---
 
-- name: Create Deployment User aka Deployer
+- name: Create Deployment User aka "DEPLOYER!!!"
   user: |
-    name={{ deployer_username }}
-    password={{ deployer_password }}
+    name="{{ deployer__username }}"
+    password="{{ deployer__password }}"
+    group="{{ deployer__group_primary }}"
+    shell="{{ deployer__shell }}"
     generate_ssh_key=yes
-    group=ssh
     append=yes
     state=present
-    shell=/bin/bash
   register: deployer_created
 
 - name: Add deployment user groups
   when: deployer_created|success
   user: |
-    name={{ deployer_username }}
-    groups={{ item }}
-  with_items: groups_to_join
+    name="{{ deployer__username }}"
+    groups="{{ item }}"
+  with_items: deployer__groups_to_join
 
 - name: Add Deployer Authorised Key
   authorized_key:
-    user={{ deployer_username }}
-    key="{{ deployer_public_key }}"
+    user="{{ deployer__username }}"
+    key="{{ deployer__public_key }}"
     state=present
 
 - name: Ensure github.com/bitbucket.org are a known host
   lineinfile:
-    dest: /home/{{ deployer_username }}/.ssh/known_hosts
+    dest: "/home/{{ deployer__username }}/.ssh/known_hosts"
     create: yes
     state: present
     line: "{{ item.domain }}"

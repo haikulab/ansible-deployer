@@ -2,11 +2,14 @@
 # default variables
 # please overwrite in the playbook.yml
 
-deployer_username: deployer
-deployer_password: $1$BYnbBLbt$uPcFu8SPIZdxqPh61
-deployer_public_key: "{{ lookup('file', '~/.ssh/id_rsa.pub' ) }}"
+deployer__username: deployer
+deployer__group_primary: deployer
+deployer__password: $1$BYnbBLbt$uPcFu8SPIZdxqPh61
+deployer__public_key: "{{ lookup('file', '~/.ssh/id_rsa.pub' ) }}"
+deployer__shell: /bin/bash
 
-groups_to_join:
+## Groups the user should belong to
+deployer__groups_to_join:
   - sudo
   - ssh
   - www-data
