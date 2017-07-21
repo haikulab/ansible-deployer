@@ -34,3 +34,4 @@
   with_items:
     - { domain: "{{ lookup('pipe', 'ssh-keyscan -t rsa github.com') }}", regexp: '^github\.com' }
     - { domain: "{{ lookup('pipe', 'ssh-keyscan -t rsa bitbucket.org') }}", regexp: '^bitbucket\.org' }
+    - { domain: "{{ lookup('pipe', 'ssh-keyscan -t rsa gitlab.com') }}", regexp: '^gitlab\.com' }
