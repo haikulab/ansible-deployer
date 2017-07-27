@@ -1,0 +1,3 @@
+{% for ability in abilities -%}
+%deployer ALL=NOPASSWD: {{ ability.can_run }}
+{% endfor %}
