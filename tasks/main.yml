@@ -6,6 +6,13 @@
     state: present
   register: deployer_group_created
 
+- name: Create secondary groups
+  group:
+    name: "{{ item }}"
+    state: present
+  with_items: "{{ deployer__groups_to_join }}"
+  register: deployer_secondary_groups_created
+
 - name: Create deployment user"
   when: deployer_group_created|success
   user: |
@@ -22,8 +29,7 @@
   when: deployer_created|success
   user: >
     name="{{ deployer__username }}"
-    groups="{{ item }}"
-  with_items: "{{ deployer__groups_to_join }}"
+    groups="{{ deployer__groups_to_join | join(',') }}"
 
 - name: Add Deployer Authorised Key
   when: deployer_created|success

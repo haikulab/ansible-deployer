@@ -15,6 +15,7 @@ deployer__public_keys: []
 deployer__groups_to_join:
   - sudo
   - ssh
+  - www-data
 
 ## Array of sudoer actions that can be performed by deployer
 ### NOTE: sudo will ignore any files with filename containging a period/dot (.) or ~
