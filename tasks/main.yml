@@ -26,6 +26,7 @@
   with_items: "{{ deployer__groups_to_join }}"
 
 - name: Add Deployer Authorised Key
+  when: deployer_created|success
   authorized_key:
     user="{{ deployer__username }}"
     key="{{ item }}"
@@ -33,6 +34,7 @@
   with_items: "{{ deployer__public_keys }}"
 
 - name: Ensure github.com/bitbucket.org are a known host
+  when: deployer_created|success
   lineinfile:
     dest: "/home/{{ deployer__username }}/.ssh/known_hosts"
     create: yes
@@ -45,6 +47,7 @@
     - { domain: "{{ lookup('pipe', 'ssh-keyscan -t rsa gitlab.com') }}", regexp: '^gitlab\.com' }
 
 - name: Create sudoer.d configuration for deployer in /etc/sudoers.d/
+  when: deployer_created|success
   template:
     src: "sudoers.d.tmpl.j2"
     dest: "/etc/sudoers.d/{{ item.filename }}"
