@@ -54,7 +54,9 @@ Linux passwords are encrypted using SHA-512. Ansible's documentation on [generat
 
 On Ubuntu 14.04, the `mkpasswd` command comes with package `whois`:
 
-    sudo apt-get install -y whois
+```bash
+sudo apt-get install -y whois
+```
 
 After installing `whois`, you can use the `mkpasswd` command.
 

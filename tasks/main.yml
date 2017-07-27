@@ -1,6 +1,13 @@
 ---
 
-- name: Create Deployment User aka "DEPLOYER!!!"
+- name: Create deployment group
+  group:
+    name: "{{ deployer__group_primary }}"
+    state: present
+  register: deployer_group_created
+
+- name: Create deployment user"
+  when: deployer_group_created|success
   user: |
     name="{{ deployer__username }}"
     password="{{ deployer__password }}"
@@ -13,16 +20,17 @@
 
 - name: Add deployment user groups
   when: deployer_created|success
-  user: |
+  user: >
     name="{{ deployer__username }}"
     groups="{{ item }}"
-  with_items: deployer__groups_to_join
+  with_items: "{{ deployer__groups_to_join }}"
 
 - name: Add Deployer Authorised Key
   authorized_key:
     user="{{ deployer__username }}"
-    key="{{ deployer__public_key }}"
+    key="{{ item }}"
     state=present
+  with_items: "{{ deployer__public_keys }}"
 
 - name: Ensure github.com/bitbucket.org are a known host
   lineinfile:
@@ -35,3 +43,13 @@
     - { domain: "{{ lookup('pipe', 'ssh-keyscan -t rsa github.com') }}", regexp: '^github\.com' }
     - { domain: "{{ lookup('pipe', 'ssh-keyscan -t rsa bitbucket.org') }}", regexp: '^bitbucket\.org' }
     - { domain: "{{ lookup('pipe', 'ssh-keyscan -t rsa gitlab.com') }}", regexp: '^gitlab\.com' }
+
+- name: Create sudoer.d configuration for deployer in /etc/sudoers.d/
+  template:
+    src: "sudoers.d.tmpl.j2"
+    dest: "/etc/sudoers.d/{{ item.filename }}"
+    mode: "0440"
+    owner: root
+    group: root
+    validate: /usr/sbin/visudo -c -f %s
+  with_items: "{{ deployer__sudoer_abilities }}"

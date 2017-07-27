@@ -5,6 +5,8 @@
 deployer__username: deployer
 deployer__group_primary: deployer
 deployer__password: $1$BYnbBLbt$uPcFu8SPIZdxqPh61
+# refer to the README.md "Generating User Passwords" section
+## or `mkpasswd --method=SHA-512`
 deployer__shell: /bin/bash
 deployer__public_keys: []
 #  - "{{ lookup('file', '~/.ssh/id_rsa.pub' ) }}"
@@ -13,4 +15,9 @@ deployer__public_keys: []
 deployer__groups_to_join:
   - sudo
   - ssh
-  - www-data
+
+## Array of sudoer actions that can be performed by deployer
+### NOTE: sudo will ignore any files with filename containging a period/dot (.) or ~
+deployer__sudoer_abilities: []
+  # - { filename: "deployer-abilities", can_run: "/usr/sbin/service php7.0-fpm reload" }
+
